@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A better way to run our acceptance tests with cucumber and docker">
+    <meta name="author" content="Iván Corrales Solera , wesovilabs">
+
+    <title>Implementing CORS support for Spray applications</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../css/blog-home.css" rel="stylesheet">
+    <link href="../../css/landing-page.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+    <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand topnav" href="#"><font color="#636363">&lt;</font>W<font color="#000000">L</font><font color="#636363">/&gt;</font></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="../../index.html">Home</a>
+                </li>
+                <li>
+                    <a href="../0.html">Blog</a>
+                </li>
+                <li>
+                    <a href="mailto:info@wesovilabs.com">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <!-- Pager -->
+    <ul class="pager">
+        <li class="previous">
+            <a href="../1.html">&larr; Back to index</a>
+        </li>
+    </ul>
+    <h1 class="page-header">
+        A better way to run our acceptance tests with <font color="#BE290B">Cucumber</font> and <font color="#BE290B">Docker</font>
+    </h1>
+
+    <div class="row">
+        <!-- Blog Post Content Column -->
+        <div class="col-lg-8">
+
+
+
+
+            <!-- Author -->
+            <p class="lead">
+                by <a href="#" class="author">Iván Corrales Solera</a>
+            </p>
+            <hr>
+            <!-- Date/Time -->
+            <p><span class="glyphicon glyphicon-time"></span> Posted on April 18th, 2015</p>
+
+            <!-- Preview Image -->
+            <img class="img-responsive" src="banner.jpg" alt="">
+            <hr>
+            <article class="post-content">
+                <h2 id="introduction">Introduction</h2>
+
+                <p>Since I assume you already know Spring Boot and the benefits of this one,this example will be exclusively focused on showing how to write acceptance tests agains a virtual environment that runs on docker containers and they are orchestrated by compose (previously known as flig).</p>
+
+                <h1 id="scenario">Scenario</h1>
+
+                <p>The example will consist on building a couple of micro services: One will persist data into the data base and the second one will take this information from the database. To sum up we will get 3 containers (1 per each micro service and the third for the database) which are represented on the below:</p>
+
+                <p><img src="http://localhost:4000/assets/images/posts/001/containers.png" alt="Containers" /></p>
+
+                <h2 id="purpose">Purpose</h2>
+
+                <p>The purpose of this article is run our acceptance tests for a couple of micro services which are installed on docker containers, and being orchestrated by Compose (previously known as flig).</p>
+
+                <h2 id="lets-do-it">Let’s do it</h2>
+
+                <p>First of all, we will create our Spring micro services. We can do it taking advantage of this site <a href="https://start.spring.io/">https://start.spring.io/</a> which I found recently and It is so handy since it provides us with a skeleton of a spring boot project.</p>
+
+                <p>You can find the code on the following <a href="http://www.wesovi.com/microservice-docker-compose/">link</a></p>
+
+                <p>If you download the code you will see a maven project with three submodules:</p>
+
+                <ul>
+                    <li><strong>ms.insertion</strong>: Micro service I : Insert items into the database.</li>
+                    <li><strong>ms.extraction</strong>: Micro service II : Extract items from the database.</li>
+                    <li><strong>ms.at</strong>: Acceptance Tests project.</li>
+                </ul>
+
+                <p>Each micro service module contains a couple of integration tests which you can run by the following command: <strong>mvn integration-test -P integration</strong></p>
+
+                <p>Now, that we already have our two micro services correctly implemented, we will create our acceptance tests making use of cucumber. Below we can see the feature</p>
+
+                <div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="ss">Feature</span><span class="p">:</span> <span class="no">Micro</span> <span class="no">Services</span> <span class="no">Acceptance</span> <span class="no">Tests</span>
+
+                    <span class="ss">Scenario</span><span class="p">:</span> <span class="no">Getting</span> <span class="n">the</span> <span class="n">list</span> <span class="n">of</span> <span class="n">items</span> <span class="k">when</span> <span class="n">the</span> <span class="n">database</span> <span class="n">is</span> <span class="n">empty</span>
+                    <span class="no">Given</span> <span class="n">a</span> <span class="n">database</span> <span class="n">with</span> <span class="n">no</span> <span class="n">items</span>
+                    <span class="no">When</span> <span class="n">we</span> <span class="n">ask</span> <span class="k">for</span> <span class="n">the</span> <span class="n">list</span> <span class="n">of</span> <span class="n">items</span>
+                    <span class="no">Then</span> <span class="n">we</span> <span class="n">obtain</span> <span class="n">no</span> <span class="n">items</span>
+
+                    <span class="ss">Scenario</span><span class="p">:</span> <span class="no">Getting</span> <span class="n">the</span> <span class="n">list</span> <span class="n">of</span> <span class="n">items</span> <span class="k">when</span> <span class="n">the</span> <span class="n">database</span> <span class="n">already</span> <span class="n">contains</span> <span class="n">items</span><span class="o">.</span>
+                    <span class="no">Given</span> <span class="n">the</span> <span class="n">items</span> <span class="n">database</span> <span class="n">is</span> <span class="n">initialized</span> <span class="n">with</span> <span class="n">the</span> <span class="n">following</span> <span class="n">data</span>
+                    <span class="o">|</span> <span class="nb">name</span> 	<span class="o">|</span> <span class="n">description</span>		<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item001</span>	<span class="o">|</span> <span class="no">Bargains</span>		<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item002</span>	<span class="o">|</span> <span class="no">Promotions</span>	        <span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item003</span>	<span class="o">|</span> <span class="no">Exclusive</span>		<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item004</span>	<span class="o">|</span> <span class="no">Out</span> <span class="n">of</span> <span class="n">date</span>	        <span class="o">|</span>
+                    <span class="no">When</span> <span class="n">we</span> <span class="n">ask</span> <span class="k">for</span> <span class="n">the</span> <span class="n">list</span> <span class="n">of</span> <span class="n">items</span>
+                    <span class="no">Then</span> <span class="n">we</span> <span class="n">obtain</span> <span class="s1">&#39;4&#39;</span> <span class="n">items</span>
+
+                    <span class="ss">Scenario</span><span class="p">:</span> <span class="no">We</span> <span class="n">add</span> <span class="kp">new</span> <span class="n">items</span> <span class="n">to</span> <span class="n">an</span> <span class="n">empty</span> <span class="n">database</span>
+                    <span class="no">Given</span> <span class="n">a</span> <span class="n">database</span> <span class="n">with</span> <span class="n">no</span> <span class="n">items</span>
+                    <span class="no">When</span> <span class="n">we</span> <span class="n">add</span> <span class="n">the</span> <span class="n">below</span> <span class="n">item</span>
+                    <span class="o">|</span> <span class="nb">name</span>    <span class="o">|</span> <span class="n">description</span> <span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item001</span> <span class="o">|</span> <span class="no">Bargains</span>    <span class="o">|</span>
+                    <span class="no">And</span> <span class="n">we</span> <span class="n">ask</span> <span class="k">for</span> <span class="n">the</span> <span class="n">list</span> <span class="n">of</span> <span class="n">items</span>
+                    <span class="no">Then</span> <span class="n">we</span> <span class="n">obtain</span> <span class="s1">&#39;1&#39;</span> <span class="n">item</span>
+
+                    <span class="ss">Scenario</span><span class="p">:</span> <span class="no">We</span> <span class="n">add</span> <span class="kp">new</span> <span class="n">items</span> <span class="n">to</span> <span class="n">an</span> <span class="n">empty</span> <span class="n">database</span>
+                    <span class="no">Given</span> <span class="n">the</span> <span class="n">items</span> <span class="n">database</span> <span class="n">is</span> <span class="n">initilized</span> <span class="n">with</span> <span class="n">the</span> <span class="n">folloing</span> <span class="n">data</span>
+                    <span class="o">|</span> <span class="nb">name</span> 	<span class="o">|</span> <span class="n">description</span>		<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item001</span>	<span class="o">|</span> <span class="no">Bargains</span>		<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item002</span>	<span class="o">|</span> <span class="no">Promotions</span>		<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item003</span>	<span class="o">|</span> <span class="no">Exclusive</span>		<span class="o">|</span>
+                    <span class="no">When</span> <span class="n">we</span> <span class="n">add</span> <span class="n">the</span> <span class="n">below</span> <span class="n">item</span>
+                    <span class="o">|</span> <span class="nb">name</span> 	 <span class="o">|</span> <span class="n">description</span>	<span class="o">|</span>
+                    <span class="o">|</span> <span class="n">item004</span>	 <span class="o">|</span> <span class="no">Out</span> <span class="n">of</span> <span class="n">date</span>  <span class="o">|</span>
+                    <span class="no">And</span> <span class="n">we</span> <span class="n">ask</span> <span class="k">for</span> <span class="n">the</span> <span class="n">list</span> <span class="n">of</span> <span class="n">items</span>
+                    <span class="no">Then</span> <span class="n">we</span> <span class="n">obtain</span> <span class="s1">&#39;4&#39;</span> <span class="n">item</span></code></pre></div>
+
+                <p>Until few time ago we would run the acceptance tests by following the below steps:</p>
+
+                <ul>
+                    <li>Launching the web server</li>
+                    <li>Deploying the war onto the application server.</li>
+                    <li>Running our acceptance tests agains</li>
+                    <li>Stopping the application server.</li>
+                </ul>
+
+                <p>The above way to run our acceptance tests is fine but not great since we would be running our acceptance tests in an environment completely different to production.</p>
+
+                <p>In the last year many people are betting for working with containers to simulate a production environment, so please do not forget about testing and take advantage of this to move another step forward.</p>
+
+                <h2 id="conclusions">Conclusions</h2>
+                <p>Below some pros and cons of doing acceptance tests as is explained in this article:</p>
+
+                <ul>
+                    <li><strong>Pros</strong></li>
+                    <li>Testing in a real environment.</li>
+                    <li>Adapting our Tests to the new way to do things.</li>
+                    <li>Improving our continuous integration.</li>
+                    <li>Adding quality to our developments.</li>
+                    <li>
+                        <p>Introduce developers to a DevOps world.</p>
+                    </li>
+                    <li><strong>Cons</strong></li>
+                    <li>This could take  bit longer than running our tests in our local environment.</li>
+                    <li>Developers need to have basic knowledge about docker.</li>
+                </ul>
+
+                <h2 id="code">Code</h2>
+                <p>You can find the code on my github repo <a href="http://www.wesovi.com/microservice-docker-compose/">link</a></p>
+
+                <p>The steps to run the example are explained on Git repository (README.md), Be aware of the first time you run the example this will take a little more as the virtual environment is created. In this example, I assume you have vegrant installed on your computer.</p>
+
+                <p>I am still working on this example but in the meantime I encourage you to fork my project and make some pull requests!</p>
+
+                <h2 id="referenes">Referenes</h2>
+                <p>Useful links:</p>
+
+                <ul>
+                    <li>
+                        <p><a href="http://g00glen00b.be/spring-boot-rest-assured/">Great post about Integration Testing in Spring Boot</a></p>
+                    </li>
+                    <li>
+                        <p><a href="http://www.hascode.com/2014/12/bdd-testing-with-cucumber-java-and-junit/">First steps with Cucumber</a></p>
+                    </li>
+                </ul>
+
+                <hr />
+
+            </article>
+
+
+        </div>
+        <!-- Blog Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+            <!-- Side Widget Well -->
+            <div class="well">
+                <h4>Would you like to write for this blog?</h4>
+                <p>If you are one of theses guys who enjoys doing some researches and sharing the knowledge with other colleagues, please feel free to reach us at:</p>
+                <a class="emailTo" href="mailto:info@wesovilabs.com">info@wesovilabs.com</a>
+                <br/>
+            </div>
+
+            <div class="well">
+                <h4>Related blogs</h4>
+                <ul>
+                    <li><a href="../A%20better%20way%20to%20run%20our%20acceptance%20tests/index.html">A better way to run acceptance tests</a></li>
+                    <li><a href="../Docker%20para%20test%20de%20integración%20en%20NodeJS/index.html">Docker para tests de integración en NodeJS</a></li>
+                    <li><a href="../First%20steps%20with%20Erlang/index.html">First steps with Erlang</a></li>
+                    <li><a href="../Go%20for%20dummies/index.html">Go for dummies</a></li>
+                    <li><a href="../Implementing%20CORS%20support%20for%20Spray%20applications/index.html">Implementing CORS support for Spray applications</a></li>
+                    <li><a href="../Object.freeze%20vs%20Object.seal%20by%20example/index.html">Object.freeze vs Object.seal by example</a></li>
+
+                </ul>
+            </div>
+            <div class="well">
+                <a class="twitter-timeline" href="https://twitter.com/wesovilabs" data-widget-id="712543106898505729">Tweets por el @wesovilabs.</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <ul class="pager">
+        <li class="previous">
+            <a href="../0.html">&larr; Back to index</a>
+        </li>
+    </ul>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery -->
+<script src="../../js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../js/bootstrap.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-75463311-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</body>
+
+</html>

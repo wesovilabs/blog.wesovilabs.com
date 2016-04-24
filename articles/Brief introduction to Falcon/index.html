@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Implementing CORS support for Spray applications">
+    <meta name="author" content="Iván Corrales Solera , wesovilabs">
+
+    <title>Brief introduction to Falcon </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../css/blog-home.css" rel="stylesheet">
+    <link href="../../css/landing-page.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+    <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand topnav" href="#"><font color="#636363">&lt;</font>W<font
+                    color="#000000">L</font><font color="#636363">/&gt;</font></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="../../index.html">Home</a>
+                </li>
+                <li>
+                    <a href="../0.html">Blog</a>
+                </li>
+                <li>
+                    <a href="mailto:info@wesovilabs.com">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <!-- Pager -->
+    <ul class="pager">
+        <li class="previous">
+            <a href="../1.html">&larr; Back to index</a>
+        </li>
+    </ul>
+    <h1 class="page-header">
+        Brief introduction to <font color="#BE290B">Falcon</font>
+    </h1>
+
+    <div class="row">
+        <!-- Blog Post Content Column -->
+        <div class="col-lg-8">
+
+            <!-- Author -->
+            <p class="lead">
+                by <a href="#" class="author">Iván Corrales Solera</a>
+            </p>
+            <hr>
+            <!-- Date/Time -->
+            <p><span class="glyphicon glyphicon-time"></span> Posted on April 23th, 2016</p>
+
+            <!-- Preview Image -->
+            <img class="img-responsive" src="falcon-banner.png" alt="">
+            <hr>
+            <article class="post-content">
+                <h2 id="synopsis">Synopsis</h2>
+
+                <p>I hope this guide help guys who gonna start coding in Python and implementing REST API</p>
+
+                <h2 id="assumptions">Assumptions</h2>
+
+                <p>I understand you have a clear idea about REST is and python installed onto your environment and you have a real os (not windows)</p>
+
+                <h2 id="motivation">Motivation</h2>
+
+                <ul>
+                    <li>
+                        <p>Introducing into a new programming language to me: <b>Python</b></p>
+                    </li>
+                    <li>
+                        <p>Learning basic concepts and best practices in Python coding</p>
+                    </li>
+                </ul>
+
+                <h2 id="installation">Setting up the environment</h2>
+
+                <p>In order to get and environment ready to start coding we'll follow the below steps:</p>
+                <ul>
+                    <li>
+                        <strong>1. Creating a project directory for this development</strong>
+                        <pre><code>mkdir -p /Users/Ivan/Sandbox/WesoviLabs/falcon-rest-api</code></pre>
+                        <pre><code>cd /Users/Ivan/Sandbox/WesoviLabs/falcon-rest-api</code></pre>
+                    </li>
+                    <li>
+                        <strong>2. Setting up a Virtual environment</strong>
+                        <br/>
+                        <p>We can skip next step in case of virtualenv is already installed.</p>
+                        <pre><code>pip install virtualenv</code></pre>
+                        <p>We could use the next virtualenvironment for ent developments</p>
+                        <pre><code>virtualenv my-restapi-virtualenv</code></pre>
+                        <p>We activate the virtualenv</p>
+                        <pre><code>source my-restapi-virtualenv/bin/activate</code></pre>
+                    </li>
+                    <li>
+                        <strong>2. Installing required libraries</strong>
+                        <br/>
+                        <p>The falcon librrary</p>
+                        <pre><code>pip install falcon</code></pre>
+                        <p>Gunicorn is a python WSGI server, more info <a href="http://gunicorn.org/">here</a></p>
+                        <pre><code>pip install gunicorn</code></pre>
+                        <p>Cython will make our application fly!, PyPy would be even better but unfortunately Falcon is currently only compatible with PyPy 2.7</p>
+                        <pre><code>pip install --upgrade cython falcon</code></pre>
+                    </li>
+                </ul>
+                <h2 id="implementing-cors-directive">Creating a very basic application</h2>
+                <p>We will create the <b>app.py</b>.
+                    <script src="https://gist.github.com/ivancorrales/6d6670cd317bd6ca860262dfd4d1b81a.js"></script>
+                    In order to run the application we can do it just by the below command
+                    <pre><code>gunicorn app:api</code></pre>
+                    <img src="gunicorn%20running.png" class="img-responsive"/>
+                    Now we can open another temrinal and test the service by running
+                    <pre><code>curl http://127.0.0.1:8000/books/ -i</code></pre>
+                    <img src="response.png" class="img-responsive"/>
+
+                </p>
+                <h2 id="code">Code</h2>
+                <p>Code can be found on Github, <strong><a href="https://github.com/wesovilabs/falcon-rest-api/tree/basic_application">click here to download it</a></strong></p>
+            </article>
+
+
+        </div>
+        <!-- Blog Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+            <!-- Side Widget Well -->
+            <div class="well">
+                <h4>Would you like to write for this blog?</h4>
+                <p>If you are one of theses guys who enjoys doing some researches and sharing the knowledge with other
+                    colleagues, please feel free to reach us at:</p>
+                <a class="emailTo" href="mailto:info@wesovilabs.com">info@wesovilabs.com</a>
+                <br/>
+
+            </div>
+
+            <div class="well">
+                <h4>Related blogs</h4>
+                <ul>
+                    <li><a href="../A%20better%20way%20to%20run%20our%20acceptance%20tests/index.html">A better way to
+                        run acceptance tests</a></li>
+                    <li><a href="../Docker%20para%20test%20de%20integración%20en%20NodeJS/index.html">Docker para tests
+                        de integración en NodeJS</a></li>
+                    <li><a href="../First%20steps%20with%20Erlang/index.html">First steps with Erlang</a></li>
+                    <li><a href="../Go%20for%20dummies/index.html">Go for dummies</a></li>
+                    <li><a href="../Implementing%20CORS%20support%20for%20Spray%20applications/index.html">Implementing
+                        CORS support for Spray applications</a></li>
+                    <li><a href="../Object.freeze%20vs%20Object.seal%20by%20example/index.html">Object.freeze vs
+                        Object.seal by example</a></li>
+
+                </ul>
+            </div>
+            <div class="well">
+                <a class="twitter-timeline" href="https://twitter.com/wesovilabs" data-widget-id="712543106898505729">Tweets
+                    por el @wesovilabs.</a>
+                <script>!function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                    if (!d.getElementById(id)) {
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = p + "://platform.twitter.com/widgets.js";
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }
+                }(document, "script", "twitter-wjs");</script>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <ul class="pager">
+        <li class="previous">
+            <a href="../0.html">&larr; Back to index</a>
+        </li>
+    </ul>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery -->
+<script src="../../js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../js/bootstrap.min.js"></script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-75463311-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</body>
+
+</html>

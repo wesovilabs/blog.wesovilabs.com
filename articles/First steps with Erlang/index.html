@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>First steps with Erlang</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../css/blog-home.css" rel="stylesheet">
+    <link href="../../css/landing-page.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+    <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand topnav" href="#"><font color="#636363">&lt;</font>W<font color="#000000">L</font><font color="#636363">/&gt;</font></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="../../index.html">Home</a>
+                </li>
+                <li>
+                    <a href="../0.html">Blog</a>
+                </li>
+                <li>
+                    <a href="mailto:info@wesovilabs.com">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <!-- Pager -->
+    <ul class="pager">
+        <li class="previous">
+            <a href="../0.html">&larr; Back to index</a>
+        </li>
+    </ul>
+    <h1 class="page-header">
+        First steps with <font color="#BE290B">Erlang</font>
+    </h1>
+
+    <div class="row">
+        <!-- Blog Post Content Column -->
+        <div class="col-lg-8">
+
+            <!-- Author -->
+            <p class="lead">
+                by <a href="#" class="author">Iván Corrales Solera</a>
+            </p>
+
+            <!-- Date/Time -->
+            <p><span class="glyphicon glyphicon-time"></span> Posted on January 29th, 2016</p>
+
+            <!-- Preview Image -->
+            <img class="img-responsive" src="Erlang.jpg" alt="">
+            <hr>
+            <article class="post-content">
+                <h2 id="setting-up-the-environment">Setting up the environment</h2>
+
+                <p>Since I am working with a Mac, first step I will take is running the following command:</p>
+
+<pre><code>    brew install erlang
+</code></pre>
+
+                <h2 id="purpose-of-this-post">Purpose of this post</h2>
+
+                <p>Just sharing with other people my opinion about my brief experience with Erlang and hopefully will give other
+                    people some tips on how to start coding in this language.</p>
+
+                <h2 id="coding-a-basic-program">Coding a basic program</h2>
+
+                <p>Below the code which is hosted on Github</p>
+
+                <script src="https://gist.github.com/ivancorrales/289dfe886ede6d9ec9ac.js"></script>
+
+                <h2 id="compiling-the-program">Compiling the program</h2>
+
+                <p>The above code must be compiled  so we’ll run the below command</p>
+
+                <pre><code>erlc &lt;filename.erl&gt;
+                </code></pre>
+
+                <p>and this will create a new file with the same name but with extension <strong>*.beam</strong></p>
+
+                <h2 id="running-the-program">Running the program</h2>
+
+                <p>Once we compile the code we can run the program with the following command: <strong>erl -run poc all -run init stop -noshell</strong></p>
+
+                <p>This is not a hello world program at all but not a very complicated one neither. We got a list of people (men and women)
+                    and after running the program we will only display by console a greeting to those people who are older than the average
+                    of people in the list. In case of we greeting to a woman we’ll say “Hello miss…” and on the other hand we will say
+                    “hello mister …” when greeting to a man.</p>
+
+                <p>To sum up the program execution will display the below:</p>
+
+                <pre><code>The average age is 31 years old.
+                    Hello miss "Mariah" , you're 51 and you are older than average people
+                    Hello mister "John" , you're 33 and you are older than average people
+                    Hello mister "Mick" , you're 42 and you are older than average people
+                </code></pre>
+
+                <h2 id="understanding-the-code">Understanding the code</h2>
+
+                <p>Since I am not an experienced  functional-programmer I try to to understand it comparing with other programming languages which I got more experience working with.</p>
+
+                <p>Apologize in advance for all those mistakes I will be making in my explanation.</p>
+
+                <ul>
+                    <li><strong>Module declaration</strong>: This looks like the package declaration (or namespace) in other programming languages.</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">poc</span><span class="p">).</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Declaring “public/accesible methods”</strong>: By this we can state what methods/functions we could be run by command line ( when we ran the program we indicated the method “all”) Otherwise we need to state the number of arguments in the functions,
+                        this looks weird from someone who comes from languages such as Java or Javascript..</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">all</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span><span class="n">say_hello</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Record declaration</strong>: I am sure any Java developer would understand this like a POJO, I mean looks like If we are declaring the object structure.</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="p">-</span><span class="ni">record</span><span class="p">(</span><span class="nl">person</span><span class="p">,{</span><span class="n">name</span><span class="p">,</span><span class="n">genre</span><span class="p">,</span><span class="n">age</span><span class="p">}).</span></code></pre></div>
+
+                <ul>
+                    <li><strong>“Records constructor”</strong>: - This is like when declaring a constructor in other programming languages.</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="nf">new_person</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Genre</span><span class="p">,</span> <span class="nv">Age</span><span class="p">)</span> <span class="o">-&gt;</span>
+                    <span class="nl">#person</span><span class="p">{</span><span class="n">name</span><span class="o">=</span><span class="nv">Name</span><span class="p">,</span> <span class="n">genre</span><span class="o">=</span><span class="nv">Genre</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="nv">Age</span><span class="p">}.</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Declaring methods / functions</strong>: I really like the idea of last line the code in a method is the response. This happens in Go or Scala (or both, don’t remember now…).
+                        word when function returning a value</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="nf">isOlderThanAveragePeople</span><span class="p">(</span><span class="nv">Age</span><span class="p">,</span><span class="nv">AverageAge</span><span class="p">)</span><span class="o">-&gt;</span>
+                    <span class="nv">Age</span><span class="o">&gt;=</span><span class="nv">AverageAge</span><span class="p">.</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Case statement</strong>: Like in other programming languages, we as make use of this statement structure.</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="nf">say_hello</span><span class="p">(</span><span class="nv">Person</span><span class="p">)</span><span class="o">-&gt;</span>
+                    <span class="k">case</span> <span class="nv">Person</span><span class="nl">#person.genre</span> <span class="k">of</span>
+                    <span class="s">&quot;m&quot;</span> <span class="o">-&gt;</span>
+                    <span class="nn">io</span><span class="p">:</span><span class="nf">fwrite</span><span class="p">(</span><span class="s">&quot;Hello mister </span><span class="si">~p</span><span class="s"> , you&#39;re </span><span class="si">~w</span><span class="s"> and you are older than average people</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Person</span><span class="nl">#person.name</span><span class="p">,</span> <span class="nv">Person</span><span class="nl">#person.age</span><span class="p">]);</span>
+                    <span class="s">&quot;f&quot;</span> <span class="o">-&gt;</span>
+                    <span class="nn">io</span><span class="p">:</span><span class="nf">fwrite</span><span class="p">(</span><span class="s">&quot;Hello miss </span><span class="si">~p</span><span class="s"> , you&#39;re </span><span class="si">~w</span><span class="s"> and you are older than average people</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Person</span><span class="nl">#person.name</span><span class="p">,</span> <span class="nv">Person</span><span class="nl">#person.age</span><span class="p">])</span>
+                    <span class="k">end</span><span class="p">.</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Objects list creation</strong>: Very similar to other programming languages, isn’t it?</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="nf">all</span><span class="p">()</span> <span class="o">-&gt;</span>
+
+                    <span class="nv">John</span> <span class="o">=</span> <span class="n">new_person</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">,</span><span class="mi">33</span><span class="p">),</span>
+                    <span class="nv">David</span> <span class="o">=</span> <span class="n">new_person</span><span class="p">(</span><span class="s">&quot;David&quot;</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">,</span><span class="mi">18</span><span class="p">),</span>
+                    <span class="nv">Mick</span> <span class="o">=</span> <span class="n">new_person</span><span class="p">(</span><span class="s">&quot;Mick&quot;</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">,</span><span class="mi">42</span><span class="p">),</span>
+                    <span class="nv">Mariah</span> <span class="o">=</span> <span class="n">new_person</span><span class="p">(</span><span class="s">&quot;Mariah&quot;</span><span class="p">,</span><span class="s">&quot;f&quot;</span><span class="p">,</span><span class="mi">51</span><span class="p">),</span>
+                    <span class="nv">Sarah</span> <span class="o">=</span> <span class="n">new_person</span><span class="p">(</span><span class="s">&quot;Sarah&quot;</span><span class="p">,</span><span class="s">&quot;f&quot;</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span>
+                    <span class="nv">People</span> <span class="o">=</span> <span class="p">[</span><span class="nv">John</span><span class="p">,</span><span class="nv">Mariah</span><span class="p">,</span><span class="nv">David</span><span class="p">,</span><span class="nv">Mick</span><span class="p">,</span><span class="nv">Sarah</span><span class="p">],</span>
+                    <span class="p">...</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Calling other methods/functions</strong>: Nothing to explain about it…</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="nf">all</span><span class="p">()</span> <span class="o">-&gt;</span>
+                    <span class="p">...</span>
+                    <span class="nv">AverageAge</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">calculate_total_age</span><span class="p">(</span><span class="nv">People</span><span class="p">)</span> <span class="o">/</span> <span class="nb">length</span><span class="p">(</span><span class="nv">People</span><span class="p">)),</span></code></pre></div>
+
+                <ul>
+                    <li><strong>Iterating over the list:</strong>: From my point of view, this is the only part which I’ve coded with a more functional-programming orientation
+                        and probably the part of code which I’ve enjoyed coding much more… As we can see, we split the method declaration in three steps:
+                        the first one assumes we receive a list of elements, the second one that we are retrieving a single element in the list, and the last one
+                        will be use to process empty lists</li>
+                </ul>
+
+                <div class="highlight"><pre><code class="language-erlang" data-lang="erlang"><span class="nf">iterate</span><span class="p">([</span><span class="nv">Person</span><span class="p">],</span><span class="nv">AverageAge</span><span class="p">)</span> <span class="o">-&gt;</span>
+                    <span class="k">case</span> <span class="n">isOlderThanAveragePeople</span><span class="p">(</span><span class="nv">Person</span><span class="nl">#person.age</span><span class="p">,</span><span class="nv">AverageAge</span><span class="p">)</span> <span class="k">of</span>
+                    <span class="n">true</span> <span class="o">-&gt;</span> <span class="n">say_hello</span><span class="p">(</span><span class="nv">Person</span><span class="p">);</span>
+                    <span class="p">_</span> <span class="o">-&gt;</span><span class="n">ok</span>
+                    <span class="k">end</span><span class="p">;</span>
+
+                    <span class="nf">iterate</span><span class="p">([</span><span class="nv">Person</span><span class="p">|</span><span class="nv">People</span><span class="p">],</span><span class="nv">AverageAge</span><span class="p">)</span> <span class="o">-&gt;</span>
+                    <span class="k">case</span> <span class="n">isOlderThanAveragePeople</span><span class="p">(</span><span class="nv">Person</span><span class="nl">#person.age</span><span class="p">,</span><span class="nv">AverageAge</span><span class="p">)</span> <span class="k">of</span>
+                    <span class="n">true</span> <span class="o">-&gt;</span> <span class="n">say_hello</span><span class="p">(</span><span class="nv">Person</span><span class="p">);</span>
+                    <span class="p">_</span> <span class="o">-&gt;</span><span class="n">ok</span>
+                    <span class="k">end</span><span class="p">,</span>
+                    <span class="n">iterate</span><span class="p">(</span><span class="nv">People</span><span class="p">,</span><span class="nv">AverageAge</span><span class="p">);</span>
+
+                    <span class="nf">iterate</span><span class="p">([],_)</span> <span class="o">-&gt;</span>
+                    <span class="n">ok</span><span class="p">.</span></code></pre></div>
+
+                <h2 id="code">Code</h2>
+                <p>Code can be found on Github, <a href="https://gist.github.com/ivancorrales/289dfe886ede6d9ec9ac#file-first-steps-with-erlang-erl">click here to download it</a></p>
+
+            </article>
+
+
+        </div>
+        <!-- Blog Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+            <!-- Side Widget Well -->
+            <div class="well">
+                <h4>Would you like to write for this blog?</h4>
+                <p>If you are one of theses guys who enjoys doing some researches and sharing the knowledge with other colleagues, please feel free to reach us at:</p>
+                <a class="emailTo" href="mailto:info@wesovilabs.com">info@wesovilabs.com</a>
+                <br/>
+
+            </div>
+
+            <div class="well">
+                <h4>Related blogs</h4>
+                <ul>
+                    <li><a href="../A%20better%20way%20to%20run%20our%20acceptance%20tests/index.html">A better way to run acceptance tests</a></li>
+                    <li><a href="../Docker%20para%20test%20de%20integración%20en%20NodeJS/index.html">Docker para tests de integración en NodeJS</a></li>
+                    <li><a href="../First%20steps%20with%20Erlang/index.html">First steps with Erlang</a></li>
+                    <li><a href="../Go%20for%20dummies/index.html">Go for dummies</a></li>
+                    <li><a href="../Implementing%20CORS%20support%20for%20Spray%20applications/index.html">Implementing CORS support for Spray applications</a></li>
+                    <li><a href="../Object.freeze%20vs%20Object.seal%20by%20example/index.html">Object.freeze vs Object.seal by example</a></li>
+
+                </ul>
+            </div>
+            <div class="well">
+                <a class="twitter-timeline" href="https://twitter.com/wesovilabs" data-widget-id="712543106898505729">Tweets por el @wesovilabs.</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <ul class="pager">
+        <li class="previous">
+            <a href="../0.html">&larr; Back to index</a>
+        </li>
+    </ul>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery -->
+<script src="../../js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../js/bootstrap.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-75463311-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</body>
+
+</html>
